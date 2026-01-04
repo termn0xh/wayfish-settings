@@ -155,7 +155,7 @@ void NetworkProxy::setSocksProxyPort(const QString &port)
 
 void NetworkProxy::updateProxy()
 {
-    QDBusInterface iface("com.cutefish.Session", "/Session", "com.cutefish.Session");
+    QDBusInterface iface("com.wayfish.Session", "/Session", "com.wayfish.Session");
 
     if (iface.isValid()) {
         iface.asyncCall("updateNetworkProxy");

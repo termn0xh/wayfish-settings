@@ -89,9 +89,9 @@ int Appearance::dockIconSize() const
 void Appearance::setDockIconSize(int dockIconSize)
 {
     if (m_dockIconSize != dockIconSize) {
-        QDBusInterface iface("com.cutefish.Dock",
+        QDBusInterface iface("com.wayfish.Dock",
                              "/Dock",
-                             "com.cutefish.Dock",
+                             "com.wayfish.Dock",
                              QDBusConnection::sessionBus());
         if (iface.isValid()) {
             iface.call("setIconSize", dockIconSize);
@@ -110,9 +110,9 @@ int Appearance::dockDirection() const
 void Appearance::setDockDirection(int dockDirection)
 {
     if (m_dockDirection != dockDirection) {
-        QDBusInterface iface("com.cutefish.Dock",
+        QDBusInterface iface("com.wayfish.Dock",
                              "/Dock",
-                             "com.cutefish.Dock",
+                             "com.wayfish.Dock",
                              QDBusConnection::sessionBus());
         if (iface.isValid()) {
             iface.call("setDirection", dockDirection);
@@ -133,9 +133,9 @@ void Appearance::setDockVisibility(int visibility)
     if (m_dockVisibility != visibility) {
         m_dockVisibility = visibility;
 
-        QDBusInterface iface("com.cutefish.Dock",
+        QDBusInterface iface("com.wayfish.Dock",
                              "/Dock",
-                             "com.cutefish.Dock",
+                             "com.wayfish.Dock",
                              QDBusConnection::sessionBus());
         if (iface.isValid()) {
             iface.call("setVisibility", visibility);
@@ -169,9 +169,9 @@ void Appearance::setDockStyle(int style)
     if (m_dockStyle != style) {
         m_dockStyle = style;
 
-        QDBusInterface iface("com.cutefish.Dock",
+        QDBusInterface iface("com.wayfish.Dock",
                              "/Dock",
-                             "com.cutefish.Dock",
+                             "com.wayfish.Dock",
                              QDBusConnection::sessionBus());
         if (iface.isValid()) {
             iface.call("setStyle", style);

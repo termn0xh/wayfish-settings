@@ -176,7 +176,7 @@ bool Battery::showPercent()
 
 void Battery::setPercentEnabled(bool value)
 {
-    QDBusInterface("com.cutefish.Statusbar", "/Statusbar").call("setBatteryPercentage", value);
+    QDBusInterface("com.wayfish.Statusbar", "/Statusbar").call("setBatteryPercentage", value);
 }
 
 QString Battery::udi() const

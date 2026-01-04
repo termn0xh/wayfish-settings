@@ -111,7 +111,7 @@ void Time::setTwentyFour(bool t)
         m_twentyFour = t;
         m_settings.setValue("twentyFour", m_twentyFour);
 
-        QDBusInterface("com.cutefish.Statusbar", "/Statusbar").call("setTwentyFourTime", m_twentyFour);
+        QDBusInterface("com.wayfish.Statusbar", "/Statusbar").call("setTwentyFourTime", m_twentyFour);
 
         emit twentyFourChanged();
     }
