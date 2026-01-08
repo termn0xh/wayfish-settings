@@ -7,9 +7,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+option(ENABLE_TRANSLATIONS "Build translations" ON)
 
 set(QT Core Gui Widgets Quick QuickControls2 X11Extras DBus Xml Concurrent LinguistTools)
 find_package(Qt5 REQUIRED ${QT})
@@ -20,13 +22,14 @@ find_package(Libcrypt REQUIRED)
 # find_package(QApt REQUIRED)
 
 find_package(KF5NetworkManagerQt REQUIRED)
-find_package(KF5ModemManagerQt REQUIRED)
 find_package(KF5Config)
 
 pkg_search_module(FontConfig REQUIRED fontconfig IMPORTED_TARGET)
 pkg_search_module(ICU REQUIRED icu-i18n)
+pkg_search_module(ICUUC REQUIRED icu-uc)
 
-include_directories(${ICU_INCLUDE_DIRS})
+include_directories(${ICU_INCLUDE_DIRS} ${ICUUC_INCLUDE_DIRS})
+include(GNUInstallDirs)
 
 set(SRCS
     src/cscreenmanager.cpp
@@ -89,12 +92,12 @@ target_link_libraries(${PROJECT_NAME}
         # FishUI
 
         KF5::NetworkManagerQt
-        KF5::ModemManagerQt
         KF5::ConfigCore
 
         PkgConfig::FontConfig
         ${FREETYPE_LIBRARIES}
         ${ICU_LDFLAGS}
+        ${ICUUC_LDFLAGS}
         Libcrypt::Libcrypt
 
         ${X11_LIBRARIES}
@@ -105,17 +108,21 @@ target_link_libraries(${PROJECT_NAME}
         # QApt
 )
 
-file(GLOB TS_FILES translations/*.ts)
-qt5_create_translation(QM_FILES ${TS_FILES})
-add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
-add_dependencies(${PROJECT_NAME} translations)
+if (ENABLE_TRANSLATIONS AND Qt5_LUPDATE_EXECUTABLE)
+    file(GLOB TS_FILES translations/*.ts)
+    qt5_create_translation(QM_FILES ${TS_FILES})
+    add_custom_target(translations DEPENDS ${QM_FILES} SOURCES ${TS_FILES})
+    add_dependencies(${PROJECT_NAME} translations)
+endif()
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(FILES
     cutefish-settings.desktop
-    DESTINATION /usr/share/applications/
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
     COMPONENT Runtime
 )
 
-install(FILES ${QM_FILES} DESTINATION /usr/share/${PROJECT_NAME}/translations)
+if (ENABLE_TRANSLATIONS AND Qt5_LUPDATE_EXECUTABLE)
+    install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations)
+endif()
